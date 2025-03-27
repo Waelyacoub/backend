@@ -1,20 +1,20 @@
-# Utiliser l'image Node.js officielle
+# Étape 1 : Utiliser l'image officielle Node.js
 FROM node:16
 
-# Créer un répertoire de travail dans le conteneur
+# Étape 2 : Créer et définir le répertoire de travail
 WORKDIR /usr/src/app
 
-# Copier les fichiers package.json et package-lock.json dans le conteneur
+# Étape 3 : Copier package.json et package-lock.json dans le répertoire de travail
 COPY package*.json ./
 
-# Installer les dépendances
+# Étape 4 : Installer les dépendances dans le conteneur
 RUN npm install
 
-# Copier le reste des fichiers de l'application
+# Étape 5 : Copier tous les autres fichiers du projet dans le conteneur
 COPY . .
 
-# Exposer le port utilisé par votre application
+# Étape 6 : Exposer le port 3000 (ou un autre port si nécessaire)
 EXPOSE 3000
 
-# Lancer l'application
+# Étape 7 : Définir la commande pour démarrer l'application
 CMD ["npm", "start"]

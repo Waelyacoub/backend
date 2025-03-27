@@ -25,33 +25,33 @@ jobs:
       # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
-
       # Step 4: Install SonarScanner
-      - name: Install SonarScanner
-        run: |
-          wget -O sonarscanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip sonarscanner.zip
-          mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
-          echo "/opt/sonar-scanner/bin" >> $GITHUB_PATH
+      # - name: Install SonarScanner
+      #   run: |
+      #     wget -O sonarscanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+      #     unzip sonarscanner.zip
+      #     mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
+      #     echo "/opt/sonar-scanner/bin" >> $GITHUB_PATH
 
       # Step 5: Run SonarQube Scan (SonarCloud)
-      - name: Run SonarQube Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: "https://sonarcloud.io"
-        run: |
-          sonar-scanner \
-            -Dsonar.projectKey=your_project_key  # Remplacez par votre clé de projet SonarCloud
-            -Dsonar.sources=.  # Répertoire des sources de code
-            -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.organization=-Dsonar.organization # Remplacez par votre organisation SonarCloud
+      # - name: Run SonarQube Scan
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: "https://sonarcloud.io"
+      #   run: |
+      #     sonar-scanner \
+      #       -Dsonar.projectKey=waelyacoub  # Remplacez par votre clé de projet SonarCloud
+      #       -Dsonar.sources=.  # Répertoire des sources de code
+      #       -Dsonar.host.url=$SONAR_HOST_URL \
+      #       -Dsonar.login=$SONAR_TOKEN \
+      #       -Dsonar.organization=Waelyacoub # Remplacez par votre organisation SonarCloud
+
 
       # Step 6: Build Docker Image
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/your-app-name:latest .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/your-app-name:latest ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nodejs-app:latest .
+          docker tag ${{ secrets.DOCKER_USERNAME }}/nodejs-app:latest ${{ secrets.DOCKER_USERNAME }}/nodejs-app:${{ github.sha }}
 
       # Step 7: Install Trivy (Docker Image Vulnerability Scanner)
       - name: Install Trivy
@@ -63,8 +63,8 @@ jobs:
       # Step 8: Run Trivy Security Scan
       - name: Run Trivy Security Scan
         run: |
-          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/your-app-name:latest
-          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/nodejs-app:latest
+          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/nodejs-app:${{ github.sha }}
 
       # Step 9: Login to DockerHub
       - name: Login to DockerHub
@@ -76,5 +76,5 @@ jobs:
       # Step 10: Push Docker Image to DockerHub
       - name: Push Docker Image to DockerHub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/your-app-name:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/nodejs-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/nodejs-app:${{ github.sha }}

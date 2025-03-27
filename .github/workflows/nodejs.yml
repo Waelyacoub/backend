@@ -42,5 +42,5 @@ jobs:
 
           # Build and push the image with a specific GitHub SHA tag
           docker buildx build \
-            -t ${{ secrets.DOCKER_USERNAME }}/nodejs-app:${{ github.sha }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/nodejs-app:d1e7171b76111685b64ed1058b2b80f1d35dc91e \
             --push .
